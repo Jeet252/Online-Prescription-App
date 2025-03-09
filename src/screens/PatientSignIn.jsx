@@ -1,3 +1,4 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -8,7 +9,15 @@ export default function PatientSignIn() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(input);
+    (async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/get/patient",
+          { email: input }
+        );
+        console.log(response);
+      } catch (error) {}
+    })();
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
