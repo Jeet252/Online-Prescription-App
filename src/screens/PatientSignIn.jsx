@@ -12,7 +12,7 @@ export default function PatientSignIn() {
     (async () => {
       try {
         const response = await axios.get(
-          "http://localhost:5000/api/get/patient",
+          "http://localhost:5000/api/post/patient/signin",
           { email: input }
         );
         console.log(response);

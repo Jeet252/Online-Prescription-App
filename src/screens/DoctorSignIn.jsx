@@ -14,10 +14,12 @@ export default function DoctorSignIn() {
         const data = { email: input };
         console.log(data);
         const response = await axios.get(
-          "http://localhost:5000/api/get/doctor",
+          "http://localhost:5000/api/post/doctor/signin",
           data
         );
-        console.log(response.data);
+        if (response.status === 201) {
+          navigate("/doctor/home");
+        }
       } catch (error) {
         console.log(error);
       }

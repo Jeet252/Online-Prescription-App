@@ -5,6 +5,10 @@ import DoctorSignIn from "./screens/DoctorSignIn";
 import DoctorSignUp from "./screens/DoctorSignUp";
 import PatientSignIn from "./screens/PatientSignIn";
 import PatientSignUp from "./screens/PatientSignUp";
+import PatientHome from "./screens/PatientHome";
+import DoctorHome from "./screens/DoctorHome";
+import ConsultationForm from "./screens/ConsultationForm";
+import PrescriptionForm from "./screens/PrescriptionForm";
 
 function App() {
   return (
@@ -15,6 +19,10 @@ function App() {
         <Route path="/doctor/signup" element={<DoctorSignUp />} />
         <Route path="/patient/signin" element={<PatientSignIn />} />
         <Route path="/patient/signup" element={<PatientSignUp />} />
+        <Route path="/patient/home" element={<PatientHome />} />
+        <Route path="/doctor/home" element={<DoctorHome />} />
+        <Route path="/prescriptionform" element={<PrescriptionForm />} />
+        <Route path="/consulationform" element={<ConsultationForm />} />
       </Routes>
     </BrowserRouter>
   );

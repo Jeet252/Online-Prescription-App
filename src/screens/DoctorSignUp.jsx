@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function DoctorSignUp() {
   const [input, setInput] = useState({
@@ -10,6 +10,8 @@ export default function DoctorSignUp() {
     email: "",
     phone: "",
   });
+
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -22,6 +24,9 @@ export default function DoctorSignUp() {
           input
         );
         console.log(response);
+        if (response.status === 201) {
+          navigate("/doctor/home");
+        }
       } catch (error) {}
     })();
   };

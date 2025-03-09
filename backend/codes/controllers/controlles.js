@@ -1,5 +1,7 @@
 import Patient from "../db/model/patient.model.js";
 import Doctor from "../db/model/doctor.model.js";
+import ConsultationSchema from "../db/model/consultation.model.js";
+import PrescriptionSchema from "../db/model/prescription.model.js";
 
 const signupPatient = async (req, res) => {
   try {
@@ -32,6 +34,12 @@ const signupDoctor = async (req, res) => {
       phone,
       specialty,
     });
+    const doctorExist = await Doctor.find({ email: email, phone: phone });
+    if (doctorExist) {
+      return res.status(404).json({
+        msg: "email or phone is already exist in database try to signin or use different credential",
+      });
+    }
     res.status(201).json({
       msg: "doctor is successfull created",
       userId: doctorCreated.name.toString(),
@@ -74,4 +82,67 @@ const signinDoctor = async (req, res) => {
   }
 };
 
-export default { signupPatient, signinPatient, signupDoctor, signinDoctor };
+const consultation = async (req, res) => {
+  try {
+    const { transaction_id, currentIllness, diabtics, allergy, other } =
+      req.body;
+    const consultationCreated = await ConsultationSchema.create({
+      transaction_id,
+      currentIllness,
+      diabtics,
+      allergy,
+      other,
+    });
+    res.status(201).json({
+      msg: "consultation is successfull created",
+      consultationCreated,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const prescription = async (req, res) => {
+  try {
+    const { medicine, careTaken } = req.body;
+    const prescriptionCreated = await PrescriptionSchema.create({
+      medicine,
+      careTaken,
+    });
+    res.status(201).json({
+      msg: "prescription is successfull created",
+      prescriptionCreated,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const doctorlist = async (req, res) => {
+  try {
+    const DoctorList = await Doctor.find({});
+    return res.status(200).send(DoctorList);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const patientlist = async (req, res) => {
+  try {
+    const PatientList = await Patient.find({});
+    return res.status(200).send(PatientList);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default {
+  signupPatient,
+  signinPatient,
+  signupDoctor,
+  signinDoctor,
+  consultation,
+  prescription,
+  doctorlist,
+  patientlist,
+};
