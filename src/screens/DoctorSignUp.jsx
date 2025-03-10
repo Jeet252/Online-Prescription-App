@@ -23,11 +23,14 @@ export default function DoctorSignUp() {
           "http://localhost:5000/api/post/doctor",
           input
         );
-        console.log(response);
         if (response.status === 201) {
           navigate("/doctor/home");
         }
-      } catch (error) {}
+      } catch (error) {
+        if (error.status === 409) {
+          alert(error.response.data.msg);
+        }
+      }
     })();
   };
   return (

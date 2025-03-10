@@ -1,9 +1,10 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PatientSignIn() {
   const [input, setInput] = useState("");
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setInput(e.target.value);
   };
@@ -11,12 +12,19 @@ export default function PatientSignIn() {
     e.preventDefault();
     (async () => {
       try {
-        const response = await axios.get(
+        const response = await axios.post(
           "http://localhost:5000/api/post/patient/signin",
           { email: input }
         );
+        if (response.status === 200) {
+          navigate("/patient/home");
+        }
         console.log(response);
-      } catch (error) {}
+      } catch (error) {
+        if (error.status === 403) {
+          alert(error.response.data.msg);
+        }
+      }
     })();
   };
   return (

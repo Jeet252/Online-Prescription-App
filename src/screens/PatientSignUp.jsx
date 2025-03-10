@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function PatientSignUp() {
   const [input, setInput] = useState({
@@ -11,6 +11,8 @@ export default function PatientSignUp() {
     illnessHistory: "",
     surgeryHistory: "",
   });
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
@@ -22,8 +24,14 @@ export default function PatientSignUp() {
           "http://localhost:5000/api/post/patient",
           input
         );
-        console.log(response);
-      } catch (error) {}
+        if (response.status === 201) {
+          // navigate("/patient/home");
+        }
+      } catch (error) {
+        if (error.status === 409) {
+          alert(error.response.data.msg);
+        }
+      }
     })();
   };
   return (

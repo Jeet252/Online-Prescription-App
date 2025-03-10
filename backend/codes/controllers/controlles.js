@@ -7,6 +7,10 @@ const signupPatient = async (req, res) => {
   try {
     const { name, age, email, phone, surgeryHistory, illnessHistory } =
       req.body;
+    const isExist = await Patient.find({ email: email, phone: phone });
+    if (isExist) {
+      return res.status(409).json({ msg: "email or phone is already exist" });
+    }
     const patientCreated = await Patient.create({
       name,
       age,
@@ -15,18 +19,24 @@ const signupPatient = async (req, res) => {
       surgeryHistory,
       illnessHistory,
     });
-    res.status(201).json({
+    return res.status(201).json({
       msg: "patient is successfull created",
       userId: patientCreated.name.toString(),
     });
   } catch (error) {
-    console.log(error);
+    console.log(error, "something wrong is with api");
   }
 };
 
 const signupDoctor = async (req, res) => {
   try {
     const { name, experience, email, phone, specialty } = req.body;
+    const isExist = await Doctor.find({ email: email, phone: phone });
+
+    if (isExist) {
+      return res.status(409).json({ msg: "email or phone is already exist" });
+    }
+
     const doctorCreated = await Doctor.create({
       name,
       experience,
@@ -34,13 +44,8 @@ const signupDoctor = async (req, res) => {
       phone,
       specialty,
     });
-    const doctorExist = await Doctor.find({ email: email, phone: phone });
-    if (doctorExist) {
-      return res.status(404).json({
-        msg: "email or phone is already exist in database try to signin or use different credential",
-      });
-    }
-    res.status(201).json({
+
+    return res.status(201).json({
       msg: "doctor is successfull created",
       userId: doctorCreated.name.toString(),
     });
@@ -52,13 +57,17 @@ const signupDoctor = async (req, res) => {
 const signinPatient = async (req, res) => {
   try {
     const { email } = req.body;
-    const patientExist = await Patient.find({
+    const isExist = await Patient.findOne({
       email,
     });
-    res.status(201).json({
-      msg: "patient is find",
-      userId: patientExist,
-    });
+    if (isExist) {
+      return res.status(200).json({
+        msg: "patient is found",
+        userId: isExist,
+      });
+    } else {
+      return res.status(403).json({ msg: "email doesn't exist" });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -67,16 +76,17 @@ const signinPatient = async (req, res) => {
 const signinDoctor = async (req, res) => {
   try {
     const { email } = req.body;
-    const doctorExist = await Doctor.find({
+    const isExist = await Doctor.findOne({
       email,
     });
-    if (!doctorExist) {
-      return res.status(404).json({
-        msg: "doctor " + email + " is not found",
-        data: await Doctor.find(),
+    if (isExist) {
+      return res.status(200).json({
+        msg: "doctor is found",
+        userId: isExist,
       });
+    } else {
+      return res.status(403).json({ msg: "email doesn't exist" });
     }
-    return res.status(200).send(doctorExist);
   } catch (error) {
     console.log(error);
   }

@@ -12,16 +12,17 @@ export default function DoctorSignIn() {
     (async () => {
       try {
         const data = { email: input };
-        console.log(data);
-        const response = await axios.get(
+        const response = await axios.post(
           "http://localhost:5000/api/post/doctor/signin",
           data
         );
-        if (response.status === 201) {
+        if (response.status === 200) {
           navigate("/doctor/home");
         }
       } catch (error) {
-        console.log(error);
+        if (error.status === 403) {
+          alert(error.response.data.msg);
+        }
       }
     })();
   };
