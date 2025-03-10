@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
-dotenv.config({ path: "../.env" });
+dotenv.config();
 
 import express from "express";
-import connect from "./codes/db/connection.js";
 import postRouter from "./codes/routes/post.route.js";
 import getRouter from "./codes/routes/get.route.js";
 import cors from "cors";
+import connectdb from "./codes/db/connection.js";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -17,10 +17,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use("/api/post", postRouter);
 app.use("/api/get", getRouter);
 
-connect().then(() => {
+connectdb().then(() => {
   app.listen(port, () => {
     console.log(`server is running at ${port}`);
   });
