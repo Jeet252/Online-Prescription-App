@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function PatientSignUp() {
+  const apiUrl = import.meta.env.VITE_PATIENT_SIGNUP;
   const [input, setInput] = useState({
     name: "",
     age: "",
@@ -20,12 +21,10 @@ export default function PatientSignUp() {
     e.preventDefault();
     (async () => {
       try {
-        const response = await axios.post(
-          "http://localhost:5000/api/post/patient",
-          input
-        );
-        if (response.status === 201) {
-          // navigate("/patient/home");
+        const response = await axios.post(apiUrl, input);
+        if (response.status === 200) {
+          localStorage.setItem("PatientId", response.data.userId);
+          navigate("/patient/home");
         }
       } catch (error) {
         if (error.status === 409) {

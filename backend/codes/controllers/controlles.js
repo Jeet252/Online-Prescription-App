@@ -21,7 +21,7 @@ const signupPatient = async (req, res) => {
     });
     return res.status(201).json({
       msg: "patient is successfull created",
-      userId: patientCreated.name.toString(),
+      userId: patientCreated._id,
     });
   } catch (error) {
     console.log(error, "something wrong is with api");
@@ -47,7 +47,7 @@ const signupDoctor = async (req, res) => {
 
     return res.status(201).json({
       msg: "doctor is successfull created",
-      userId: doctorCreated.name.toString(),
+      userId: doctorCreated._id,
     });
   } catch (error) {
     console.log(error);

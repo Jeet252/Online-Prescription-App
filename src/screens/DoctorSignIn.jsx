@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 export default function DoctorSignIn() {
+  const apiUrl = import.meta.env.VITE_DOCTOR_SIGNIN;
   const [input, setInput] = useState("");
   const handleChange = (e) => {
     setInput(e.target.value);
@@ -12,11 +13,9 @@ export default function DoctorSignIn() {
     (async () => {
       try {
         const data = { email: input };
-        const response = await axios.post(
-          "http://localhost:5000/api/post/doctor/signin",
-          data
-        );
+        const response = await axios.post(apiUrl, data);
         if (response.status === 200) {
+          localStorage.setItem("DoctorId", response.data.userId);
           navigate("/doctor/home");
         }
       } catch (error) {
