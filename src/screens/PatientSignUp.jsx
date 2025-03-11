@@ -22,8 +22,8 @@ export default function PatientSignUp() {
     (async () => {
       try {
         const response = await axios.post(`${apiUrl}/api/post/patient`, input);
-        if (response.status === 200) {
-          localStorage.setItem("PatientId", response.data.userId._id);
+        if (response.status === 201) {
+          localStorage.setItem("PatientId", response.data.userId);
           navigate("/patient/home");
         }
       } catch (error) {

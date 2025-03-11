@@ -11,7 +11,7 @@ export default function DoctorHome() {
         const response = await axios.post(`${apiUrl}/api/post/patientlist`, {
           doctorId: localStorage.getItem("DoctorId"),
         });
-        console.log(response);
+        console.log(response.data);
         setPatient(response.data.msg || response.data);
       } catch (error) {
         console.log(error);

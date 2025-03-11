@@ -8,9 +8,13 @@ const signupPatient = async (req, res) => {
   try {
     const { name, age, email, phone, surgeryHistory, illnessHistory } =
       req.body;
-    const isExist = await Patient.find({ email: email, phone: phone });
+    const isExist = await Patient.findOne({
+      $or: [{ email: email }, { phone: phone }],
+    });
     if (isExist) {
-      return res.status(409).json({ msg: "email or phone is already exist" });
+      return res.status(409).json({
+        msg: `email or phone is already exist ${JSON.stringify(isExist)}`,
+      });
     }
     const patientCreated = await Patient.create({
       name,
@@ -34,7 +38,7 @@ const signupDoctor = async (req, res) => {
     const { name, experience, email, phone, specialty } = req.body;
     const isExist = await Doctor.find({ email: email, phone: phone });
 
-    if (isExist) {
+    if (!isExist.length) {
       return res.status(409).json({ msg: "email or phone is already exist" });
     }
 
@@ -157,14 +161,17 @@ const doctorlist = async (req, res) => {
 const patientlist = async (req, res) => {
   try {
     const { doctorId } = req.body;
-    const patientList = await ConsultationSchema.find({ doctorId: doctorId });
-    if (!patientList[0]) {
+    const patientList = await ConsultationSchema.find({ doctorId: doctorId })
+      .populate("patientId")
+      .populate("doctorId");
+    if (!patientList.length) {
       return res.status(200).send({ msg: "Currently there is no patient" });
     } else {
       return res.status(200).send(patientList);
     }
   } catch (error) {
     console.log(error);
+    res.status(500).json({ msg: "server error" });
   }
 };
 
@@ -175,6 +182,7 @@ const findData = async (req, res) => {
     return res.send(data);
   } catch (error) {
     console.log(error);
+    res.status(500).json({ msg: "server error" });
   }
 };
 export default {
