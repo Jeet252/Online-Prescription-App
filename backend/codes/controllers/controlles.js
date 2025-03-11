@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Patient from "../db/model/patient.model.js";
 import Doctor from "../db/model/doctor.model.js";
 import ConsultationSchema from "../db/model/consultation.model.js";
@@ -92,22 +93,37 @@ const signinDoctor = async (req, res) => {
   }
 };
 
-const consultation = async (req, res) => {
+const consultationCreation = async (req, res) => {
   try {
-    const { transaction_id, currentIllness, diabtics, allergy, other } =
-      req.body;
+    const {
+      patientId,
+      doctorId,
+      transaction_id,
+      currentIllness,
+      diabtics,
+      allergy,
+      other,
+    } = req.body;
+    if (!mongoose.Types.ObjectId.isValid(patientId)) {
+      return res.status(401).send(patientId);
+    }
+
     const consultationCreated = await ConsultationSchema.create({
+      patientId: mongoose.Types.ObjectId.createFromHexString(patientId),
+      doctorId: mongoose.Types.ObjectId.createFromHexString(doctorId),
       transaction_id,
       currentIllness,
       diabtics,
       allergy,
       other,
     });
+
     res.status(201).json({
       msg: "consultation is successfull created",
       consultationCreated,
     });
   } catch (error) {
+    // console.log();
     console.log(error);
   }
 };
@@ -128,6 +144,7 @@ const prescription = async (req, res) => {
   }
 };
 
+// no changes needed in doctorlist
 const doctorlist = async (req, res) => {
   try {
     const DoctorList = await Doctor.find({});
@@ -139,20 +156,35 @@ const doctorlist = async (req, res) => {
 
 const patientlist = async (req, res) => {
   try {
-    const PatientList = await Patient.find({});
-    return res.status(200).send(PatientList);
+    const { doctorId } = req.body;
+    const patientList = await ConsultationSchema.find({ doctorId: doctorId });
+    if (!patientList[0]) {
+      return res.status(200).send({ msg: "Currently there is no patient" });
+    } else {
+      return res.status(200).send(patientList);
+    }
   } catch (error) {
     console.log(error);
   }
 };
 
+const findData = async (req, res) => {
+  try {
+    const { id } = req.body;
+    const data = await Doctor.findOne({ _id: id });
+    return res.send(data);
+  } catch (error) {
+    console.log(error);
+  }
+};
 export default {
   signupPatient,
   signinPatient,
   signupDoctor,
   signinDoctor,
-  consultation,
+  consultationCreation,
   prescription,
   doctorlist,
   patientlist,
+  findData,
 };

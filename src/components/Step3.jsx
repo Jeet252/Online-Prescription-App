@@ -1,7 +1,7 @@
 import React from "react";
 import qrCode from "../assets/QRCode.jpeg";
 
-export default function Step3() {
+export default function Step3({ handleSubmit }) {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="bg-white rounded-lg shadow-md p-6 max-w-md w-full">
@@ -64,7 +64,10 @@ export default function Step3() {
           </div>
         </div>
 
-        <button className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded w-full">
+        <button
+          onClick={handleSubmit}
+          className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded w-full"
+        >
           Submit Appointment
         </button>
       </div>

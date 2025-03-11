@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function PatientSignUp() {
-  const apiUrl = import.meta.env.VITE_PATIENT_SIGNUP;
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState({
     name: "",
     age: "",
@@ -21,9 +21,9 @@ export default function PatientSignUp() {
     e.preventDefault();
     (async () => {
       try {
-        const response = await axios.post(apiUrl, input);
+        const response = await axios.post(`${apiUrl}/api/post/patient`, input);
         if (response.status === 200) {
-          localStorage.setItem("PatientId", response.data.userId);
+          localStorage.setItem("PatientId", response.data.userId._id);
           navigate("/patient/home");
         }
       } catch (error) {

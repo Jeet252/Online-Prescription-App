@@ -12,8 +12,6 @@ export default function PatientHome() {
       setDoctorData(response.data);
       setisLoading(false);
     })();
-
-    console.log(doctorData);
   }, []);
   return (
     <div className="bg-gray-100 min-h-screen p-4">

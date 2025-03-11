@@ -8,20 +8,20 @@ export default function Step2() {
           type="radio"
           id="yes-diabiatic"
           name="Diabiatic"
-          value="diabiatic"
+          value="Diabiatic"
           className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
         />
-        <label htmlFor="male" class="ml-2 text-sm text-gray-700">
+        <label htmlFor="male" className="ml-2 text-sm text-gray-700">
           Diabiatic
         </label>
         <input
           type="radio"
           id="no-diabiatic"
           name="Diabiatic"
-          value="diabiatic"
+          value="Non-Diabiatic"
           className="form-radio h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
         />
-        <label htmlFor="male" class="ml-2 text-sm text-gray-700">
+        <label htmlFor="male" className="ml-2 text-sm text-gray-700">
           Non Diabiatic
         </label>
       </div>

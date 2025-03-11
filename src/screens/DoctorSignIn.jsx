@@ -1,10 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function DoctorSignIn() {
-  const apiUrl = import.meta.env.VITE_DOCTOR_SIGNIN;
+  const apiUrl = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState("");
+  const navigate = useNavigate();
   const handleChange = (e) => {
     setInput(e.target.value);
   };
@@ -12,10 +13,12 @@ export default function DoctorSignIn() {
     e.preventDefault();
     (async () => {
       try {
-        const data = { email: input };
-        const response = await axios.post(apiUrl, data);
+        const response = await axios.post(`${apiUrl}/api/post/doctor/signin`, {
+          email: input,
+        });
         if (response.status === 200) {
-          localStorage.setItem("DoctorId", response.data.userId);
+          console.log("i m working");
+          localStorage.setItem("DoctorId", response.data.userId._id);
           navigate("/doctor/home");
         }
       } catch (error) {
@@ -54,7 +57,7 @@ export default function DoctorSignIn() {
             type="submit"
             className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md"
           >
-            Sign Up
+            Sign In
           </button>
         </form>
 
