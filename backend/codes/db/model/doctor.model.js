@@ -6,6 +6,7 @@ const DoctorSchema = new Schema({
   email: String,
   phone: String,
   specialty: String,
+  profilePhoto: String,
 });
 const doctor = model("Doctor", DoctorSchema);
 export default doctor;

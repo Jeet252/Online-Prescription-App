@@ -9,7 +9,7 @@ export default function DoctorCard({ data }) {
     <div className="max-w-sm rounded overflow-hidden shadow-lg m-4">
       <img
         className="w-full h-48 object-cover"
-        src="https://cdn.pixabay.com/photo/2015/03/04/22/35/avatar-659652_640.png"
+        src={data.profilePhoto}
         alt="Doctor Profile"
       />
       <div className="px-6 py-4">

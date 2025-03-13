@@ -1,21 +1,44 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import mongoose from "mongoose";
 import Patient from "../db/model/patient.model.js";
 import Doctor from "../db/model/doctor.model.js";
 import ConsultationSchema from "../db/model/consultation.model.js";
 import PrescriptionSchema from "../db/model/prescription.model.js";
+import cloudinary from "cloudinary";
+
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const signupPatient = async (req, res) => {
   try {
     const { name, age, email, phone, surgeryHistory, illnessHistory } =
       req.body;
+    const profilePhoto = req.file;
+
     const isExist = await Patient.findOne({
       $or: [{ email: email }, { phone: phone }],
     });
     if (isExist) {
       return res.status(409).json({
-        msg: `email or phone is already exist ${JSON.stringify(isExist)}`,
+        msg: `Email or phone already exists`,
       });
     }
+
+    // Upload the profile photo to Cloudinary
+    let profilePhotoUrl = null;
+    if (profilePhoto) {
+      const uploadResult = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "onlinePrescriptionPlatform/patientProfilePhoto",
+      });
+      profilePhotoUrl = uploadResult.secure_url;
+    }
+
+    // Create the patient record
     const patientCreated = await Patient.create({
       name,
       age,
@@ -23,23 +46,36 @@ const signupPatient = async (req, res) => {
       phone,
       surgeryHistory,
       illnessHistory,
+      profilePhoto: profilePhotoUrl,
     });
+
     return res.status(201).json({
-      msg: "patient is successfull created",
+      msg: "Patient successfully created",
       userId: patientCreated._id,
     });
   } catch (error) {
-    console.log(error, "something wrong is with api");
+    console.log(error, "Something went wrong with the API");
+    res.status(500).json({ msg: "Server error" });
   }
 };
 
 const signupDoctor = async (req, res) => {
   try {
     const { name, experience, email, phone, specialty } = req.body;
-    const isExist = await Doctor.find({ email: email, phone: phone });
+    const profilePhoto = req.file;
+    const isExist = await Doctor.find({
+      $or: [{ email: email }, { phone: phone }],
+    });
 
     if (!isExist.length) {
       return res.status(409).json({ msg: "email or phone is already exist" });
+    }
+    let profilePhotoUrl = null;
+    if (profilePhoto) {
+      const uploadResult = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "onlinePrescriptionPlatform/doctorProfilePhoto",
+      });
+      profilePhotoUrl = uploadResult.secure_url;
     }
 
     const doctorCreated = await Doctor.create({
@@ -48,6 +84,7 @@ const signupDoctor = async (req, res) => {
       email,
       phone,
       specialty,
+      profilePhoto: profilePhotoUrl,
     });
 
     return res.status(201).json({

@@ -8,9 +8,15 @@ export default function PatientHome() {
   const [isloading, setisLoading] = useState(true);
   useEffect(() => {
     (async () => {
-      const response = await axios.get("http://localhost:5000/api/get/doctor");
-      setDoctorData(response.data);
-      setisLoading(false);
+      try {
+        const response = await axios.get(
+          "http://localhost:5000/api/get/doctor"
+        );
+        setDoctorData(response.data);
+        setisLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
     })();
   }, []);
   return (

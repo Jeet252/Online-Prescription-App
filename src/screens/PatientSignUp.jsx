@@ -12,34 +12,64 @@ export default function PatientSignUp() {
     illnessHistory: "",
     surgeryHistory: "",
   });
+  const [file, setFile] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+    if (name === "profilePhoto") {
+      setFile(files[0]);
+    } else {
+      setInput({ ...input, [name]: value });
+    }
   };
-  const handleSubmit = (e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    (async () => {
-      try {
-        const response = await axios.post(`${apiUrl}/api/post/patient`, input);
-        if (response.status === 201) {
-          localStorage.setItem("PatientId", response.data.userId);
-          navigate("/patient/home");
+    const formData = new FormData();
+    formData.append("name", input.name);
+    formData.append("age", input.age);
+    formData.append("email", input.email);
+    formData.append("phone", input.phone);
+    formData.append("illnessHistory", input.illnessHistory);
+    formData.append("surgeryHistory", input.surgeryHistory);
+    if (file) {
+      formData.append("profilePhoto", file);
+    }
+    formData.append("profilePhoto", input.profilePhoto);
+    for (let [key, value] of formData.entries()) {
+      console.log(key, value);
+    }
+    try {
+      const response = await axios.post(
+        `${apiUrl}/api/post/patient`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
-      } catch (error) {
-        if (error.status === 409) {
-          alert(error.response.data.msg);
-        }
+      );
+      console.log(response);
+      // if (response.status === 201) {
+      //   localStorage.setItem("PatientId", response.data.userId);
+      //   navigate("/patient/home");
+      // }
+    } catch (error) {
+      if (error.response && error.response.status === 409) {
+        alert(error.response.data.msg);
+      } else {
+        console.error("Error submitting form:", error);
       }
-    })();
+    }
   };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Patient Sign Up
         </h2>
-
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label
@@ -53,6 +83,7 @@ export default function PatientSignUp() {
               type="file"
               id="profilePhoto"
               accept="image/*"
+              onChange={handleChange}
               className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-700"
             />
           </div>
@@ -107,7 +138,6 @@ export default function PatientSignUp() {
               placeholder="Enter your email"
             />
           </div>
-
           <div>
             <label
               htmlFor="phone"
@@ -144,7 +174,7 @@ export default function PatientSignUp() {
           </div>
           <div>
             <label
-              htmlFor="surgeryHistory"
+              htmlFor="illnessHistory"
               className="block text-sm font-medium text-gray-700"
             >
               History of Illness
@@ -166,7 +196,6 @@ export default function PatientSignUp() {
             Sign Up
           </button>
         </form>
-
         <div className="mt-4 text-center">
           <p className="text-sm">
             Already have an account?{" "}

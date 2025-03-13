@@ -7,6 +7,7 @@ const PatientSchema = new Schema({
   phone: String,
   surgeryHistory: String,
   illnessHistory: String,
+  profilePhoto: String,
 });
 const patient = model("Patient", PatientSchema);
 export default patient;

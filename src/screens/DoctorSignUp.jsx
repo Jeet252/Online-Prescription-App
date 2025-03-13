@@ -18,9 +18,29 @@ export default function DoctorSignUp() {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    const formData = FormData();
+    formData.append("name", input.name);
+    formData.append("age", input.age);
+    formData.append("email", input.email);
+    formData.append("phone", input.phone);
+    formData.append("illnessHistory", input.illnessHistory);
+    formData.append("surgeryHistory", input.surgeryHistory);
+    if (file) {
+      formData.append("profilePhoto", file);
+    }
+    formData.append("profilePhoto", input.profilePhoto);
+
     (async () => {
       try {
-        const response = await axios.post(`${apiUrl}/api/post/doctor`, input);
+        const response = await axios.post(
+          `${apiUrl}/api/post/doctor`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         if (response.status === 201) {
           localStorage.setItem("DoctorId", response.data.userId._id);
           navigate("/doctor/home");
