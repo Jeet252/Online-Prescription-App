@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function DoctorSignUp() {
   const apiUrl = import.meta.env.VITE_API_URL;
+  const [file, setFile] = useState();
   const [input, setInput] = useState({
     name: "",
     specialty: "",
@@ -14,11 +15,16 @@ export default function DoctorSignUp() {
 
   const navigate = useNavigate();
   const handleChange = (e) => {
-    setInput({ ...input, [e.target.name]: e.target.value });
+    const { name, value, files } = e.target;
+    if (name === "profilePhoto") {
+      setFile(files[0]);
+    } else {
+      setInput({ ...input, [name]: value });
+    }
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const formData = FormData();
+    const formData = new FormData();
     formData.append("name", input.name);
     formData.append("age", input.age);
     formData.append("email", input.email);
@@ -42,18 +48,30 @@ export default function DoctorSignUp() {
           }
         );
         if (response.status === 201) {
-          localStorage.setItem("DoctorId", response.data.userId._id);
+          localStorage.setItem("DoctorId", response.data.userId);
           navigate("/doctor/home");
         }
       } catch (error) {
         if (error.status === 409) {
-          alert(error.response.data.msg);
+          <div
+            alert
+            class="relative w-full p-4 mb-4 text-white border border-orange-100 border-solid rounded-lg bg-gradient-to-tl from-red-500 to-yellow-400"
+          >
+            {error.response.data.msg}
+          </div>;
         }
       }
     })();
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      {/* <div
+        alert
+        className="sticky mt-2 w-full p-4 mb-4 text-white border border-orange-100 border-solid rounded-lg bg-gradient-to-tl from-red-500 to-yellow-400"
+      >
+        Alert orange
+      </div> */}
+
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Doctor Sign Up
@@ -72,6 +90,7 @@ export default function DoctorSignUp() {
               type="file"
               id="profilePhoto"
               accept="image/*"
+              onChange={handleChange}
               className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-700"
             />
           </div>

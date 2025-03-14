@@ -23,7 +23,7 @@ const signupPatient = async (req, res) => {
     const isExist = await Patient.findOne({
       $or: [{ email: email }, { phone: phone }],
     });
-    if (isExist) {
+    if (isExist[0]) {
       return res.status(409).json({
         msg: `Email or phone already exists`,
       });
@@ -67,7 +67,7 @@ const signupDoctor = async (req, res) => {
       $or: [{ email: email }, { phone: phone }],
     });
 
-    if (!isExist.length) {
+    if (isExist[0]) {
       return res.status(409).json({ msg: "email or phone is already exist" });
     }
     let profilePhotoUrl = null;
@@ -86,7 +86,7 @@ const signupDoctor = async (req, res) => {
       specialty,
       profilePhoto: profilePhotoUrl,
     });
-
+    debugger;
     return res.status(201).json({
       msg: "doctor is successfull created",
       userId: doctorCreated._id,

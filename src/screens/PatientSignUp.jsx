@@ -37,9 +37,7 @@ export default function PatientSignUp() {
       formData.append("profilePhoto", file);
     }
     formData.append("profilePhoto", input.profilePhoto);
-    for (let [key, value] of formData.entries()) {
-      console.log(key, value);
-    }
+
     try {
       const response = await axios.post(
         `${apiUrl}/api/post/patient`,
@@ -51,10 +49,10 @@ export default function PatientSignUp() {
         }
       );
       console.log(response);
-      // if (response.status === 201) {
-      //   localStorage.setItem("PatientId", response.data.userId);
-      //   navigate("/patient/home");
-      // }
+      if (response.status === 201) {
+        localStorage.setItem("PatientId", response.data.userId);
+        navigate("/patient/home");
+      }
     } catch (error) {
       if (error.response && error.response.status === 409) {
         alert(error.response.data.msg);
