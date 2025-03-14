@@ -26,11 +26,10 @@ export default function DoctorSignUp() {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", input.name);
-    formData.append("age", input.age);
+    formData.append("experience", input.experience);
     formData.append("email", input.email);
     formData.append("phone", input.phone);
-    formData.append("illnessHistory", input.illnessHistory);
-    formData.append("surgeryHistory", input.surgeryHistory);
+    formData.append("specialty", input.specialty);
     if (file) {
       formData.append("profilePhoto", file);
     }

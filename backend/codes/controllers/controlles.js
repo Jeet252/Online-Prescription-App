@@ -7,6 +7,7 @@ import Doctor from "../db/model/doctor.model.js";
 import ConsultationSchema from "../db/model/consultation.model.js";
 import PrescriptionSchema from "../db/model/prescription.model.js";
 import cloudinary from "cloudinary";
+import deleteFolder from "./deleteFnction/deleteFolder.js";
 
 cloudinary.v2.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -76,6 +77,7 @@ const signupDoctor = async (req, res) => {
         folder: "onlinePrescriptionPlatform/doctorProfilePhoto",
       });
       profilePhotoUrl = uploadResult.secure_url;
+      deleteFolder(req.file.path);
     }
 
     const doctorCreated = await Doctor.create({
@@ -86,7 +88,7 @@ const signupDoctor = async (req, res) => {
       specialty,
       profilePhoto: profilePhotoUrl,
     });
-    debugger;
+
     return res.status(201).json({
       msg: "doctor is successfull created",
       userId: doctorCreated._id,
