@@ -10,6 +10,9 @@ postRouter.route("/consultation").post(controller.consultationCreation);
 postRouter.route("/prescription").post(controller.prescription);
 postRouter.route("/patient/signin").post(controller.signinPatient);
 postRouter.route("/doctor/signin").post(controller.signinDoctor);
+postRouter
+  .route("/patientconsultationdata")
+  .post(controller.PatientConsultationData);
 postRouter.route("/patientlist").post(controller.patientlist);
 postRouter.route("/find").post(controller.findData);
 

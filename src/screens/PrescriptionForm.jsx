@@ -1,23 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import DoctorPrescription from "../components/DoctorPrescription";
+import axios from "axios";
+import PatientDetails from "../components/PatientDetails";
+import DoctorDetails from "../components/DoctorDetails";
 
 export default function PrescriptionForm() {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [data, setData] = useState("");
+  useEffect(() => {
+    (async () => {
+      try {
+        const response = await axios.post(
+          `${apiUrl}/api/post/patientconsultationdata`,
+          { _id: sessionStorage.getItem("Patient-ConsultationData") }
+        );
+        setData(response.data);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
   return (
-    <>
-      <div className="min-h-screen flex bg-gray-100 p-4">
-        <div className="w-1/2 p-6 bg-white rounded-l-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Patient Name</h2>
-          <p className="text-gray-700">Patient current illness</p>
-          <p className="text-gray-700 mt-4">Family medical history</p>
-          <p className="text-gray-700 mt-4">Diabetics</p>
-          <p className="text-gray-700 mt-4">Allergies</p>
-          <p className="text-gray-700 mt-4">others</p>
-        </div>
-        <div className="w-1/2 p-6 bg-white rounded-r-lg shadow-md">
-          <h2 className="text-2xl font-semibold mb-4">Prescribe </h2>
-          <DoctorPrescription />
-        </div>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-6">
+      {data === "" ? "loading" : <DoctorDetails data={data.doctorId} />}
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-6 flex flex-col md:flex-row gap-6">
+        <DoctorPrescription data={data._id} />
+        {data === "" ? "loading" : <PatientDetails data={data} />}
       </div>
-    </>
+    </div>
   );
 }

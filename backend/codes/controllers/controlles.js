@@ -173,10 +173,11 @@ const consultationCreation = async (req, res) => {
 
 const prescription = async (req, res) => {
   try {
-    const { medicine, careTaken } = req.body;
+    const { medicine, careTaken, prescribeTo } = req.body;
     const prescriptionCreated = await PrescriptionSchema.create({
       medicine,
       careTaken,
+      prescribeTo,
     });
     res.status(201).json({
       msg: "prescription is successfull created",
@@ -184,6 +185,18 @@ const prescription = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
+  }
+};
+
+const PatientConsultationData = async (req, res) => {
+  try {
+    const { _id } = req.body;
+    const patConsultData = await ConsultationSchema.findOne({ _id })
+      .populate("patientId")
+      .populate("doctorId");
+    res.status(200).send(patConsultData);
+  } catch (error) {
+    res.status(500).send(error);
   }
 };
 
@@ -231,6 +244,7 @@ export default {
   signinDoctor,
   consultationCreation,
   prescription,
+  PatientConsultationData,
   doctorlist,
   patientlist,
   findData,

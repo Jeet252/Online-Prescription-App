@@ -1,45 +1,66 @@
-import React from "react";
+import axios from "axios";
+import React, { useState } from "react";
 
-export default function DoctorPrescription() {
+export default function DoctorPrescription({ data }) {
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const [input, setInput] = useState({
+    prescribeTo: data,
+    medicine: "",
+    careTaken: "",
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(input);
+    (async () => {
+      try {
+        const response = await axios.post(
+          `${apiUrl}/api/post/prescription`,
+          input
+        );
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  };
   return (
-    <form className="space-y-4">
-      <div>
-        <label
-          htmlFor="careTaken"
-          className="block text-sm font-medium text-gray-700"
+    <div className="w-full md:w-1/2 space-y-4">
+      <h2 className="text-2xl font-bold text-gray-800">Prescribe</h2>
+      <form className="space-y-4">
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">
+            Care to be taken
+          </label>
+          <textarea
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="3"
+            onChange={(e) => {
+              setInput({ ...input, [e.target.name]: e.target.value });
+            }}
+            value={input.careTaken}
+          ></textarea>
+        </div>
+        <div>
+          <label className="block text-gray-700 font-medium mb-1">
+            Medicine
+          </label>
+          <textarea
+            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            rows="3"
+            onChange={(e) => {
+              setInput({ ...input, [e.target.name]: e.target.value });
+            }}
+            value={input.medicine}
+          ></textarea>
+        </div>
+        <button
+          type="submit"
+          className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+          onClick={handleSubmit}
         >
-          Care to be taken
-        </label>
-        <textarea
-          id="careTaken"
-          name="careTaken"
-          rows="3"
-          required
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Care to be taken"
-        ></textarea>
-      </div>
-      <div>
-        <label
-          htmlFor="medicine"
-          className="block text-sm font-medium text-gray-700"
-        >
-          Medicine
-        </label>
-        <textarea
-          id="medicine"
-          name="medicine"
-          rows="3"
-          className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-          placeholder="Medicine"
-        ></textarea>
-      </div>
-      <button
-        type="submit"
-        className="w-full py-2 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-md"
-      >
-        Submit
-      </button>
-    </form>
+          Submit
+        </button>
+      </form>
+    </div>
   );
 }

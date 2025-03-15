@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 
 export default function PatientCard({ data }) {
   const handleClick = () => {
-    sessionStorage.setItem("Patient", data.patientId._id);
+    sessionStorage.setItem("Patient-ConsultationData", data._id);
   };
   return (
     <div className="max-w-sm rounded overflow-hidden shadow-lg m-4">
       <img
         className="w-full h-48 object-cover"
-        src="doctor-profile.jpg"
+        src={data.patientId.profilePhoto}
         alt="Doctor Profile"
       />
       <div className="px-6 py-4">
