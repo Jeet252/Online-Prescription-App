@@ -37,6 +37,7 @@ const signupPatient = async (req, res) => {
         folder: "onlinePrescriptionPlatform/patientProfilePhoto",
       });
       profilePhotoUrl = uploadResult.secure_url;
+      deleteFolder(req.file.path);
     }
 
     // Create the patient record
