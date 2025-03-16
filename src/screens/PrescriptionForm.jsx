@@ -24,7 +24,7 @@ export default function PrescriptionForm() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 px-4 py-6">
       {data === "" ? "loading" : <DoctorDetails data={data.doctorId} />}
-      <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-6 flex flex-col md:flex-row gap-6">
+      <div className="bg-white shadow-lg rounded-lg w-full max-w-4xl p-6 flex flex-col-reverse md:flex-row gap-6">
         <DoctorPrescription data={data._id} />
         {data === "" ? "loading" : <PatientDetails data={data} />}
       </div>
