@@ -18,6 +18,9 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use("/", (req, res) => {
+  res.status(200).send({ msg: "hello from backend" });
+});
 app.use("/api/post", postRouter);
 app.use("/api/get", getRouter);
 
