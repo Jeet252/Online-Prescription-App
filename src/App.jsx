@@ -9,6 +9,7 @@ import PatientHome from "./screens/PatientHome";
 import DoctorHome from "./screens/DoctorHome";
 import ConsultationForm from "./screens/ConsultationForm";
 import PrescriptionForm from "./screens/PrescriptionForm";
+import PdfScreen from "./screens/PdfScreen";
 
 function App() {
   return (
@@ -23,6 +24,8 @@ function App() {
         <Route path="/doctor/home" element={<DoctorHome />} />
         <Route path="/prescriptionform" element={<PrescriptionForm />} />
         <Route path="/consulationform" element={<ConsultationForm />} />
+
+        <Route path="/pdf" element={<PdfScreen />} />
       </Routes>
     </BrowserRouter>
   );

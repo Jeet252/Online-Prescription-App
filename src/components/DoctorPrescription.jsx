@@ -4,24 +4,29 @@ import React, { useState } from "react";
 export default function DoctorPrescription({ data }) {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [input, setInput] = useState({
-    prescribeTo: data,
+    prescribeTo: data._id,
     medicine: "",
     careTaken: "",
   });
   const handleSubmit = (e) => {
     e.preventDefault();
+    sessionStorage.setItem(
+      "pdfData",
+      JSON.stringify({ ...data, medicine: "", careTaken: "" })
+    );
     console.log(input);
-    (async () => {
-      try {
-        const response = await axios.post(
-          `${apiUrl}/api/post/prescription`,
-          input
-        );
-        console.log(response);
-      } catch (error) {
-        console.log(error);
-      }
-    })();
+    // (async () => {
+    //   try {
+    //     const response = await axios.post(
+    //       `${apiUrl}/api/post/prescription`,
+    //       input
+    //     );
+    //     sessionStorage.setItem("pdfData", JSON.stringify(data));
+    //     console.log(response);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // })();
   };
   return (
     <div className="w-full md:w-1/2 space-y-4">

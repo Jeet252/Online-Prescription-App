@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.3.0",
     "@tailwindcss/vite": "^4.0.12",
     "axios": "^1.8.2",
     "cloudinary": "^2.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "html2pdf.js": "^0.9.3",
     "mongoose": "^8.12.1",
     "multer": "^1.4.5-lts.1",
     "react": "^19.0.0",
