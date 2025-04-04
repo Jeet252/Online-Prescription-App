@@ -29,7 +29,6 @@ export default function ConsultationForm() {
         if (response.status === 201) {
           alert(response.data.msg);
         }
-        console.log(response);
       } catch (error) {
         console.log(error.response);
       }
@@ -37,7 +36,7 @@ export default function ConsultationForm() {
   };
 
   useEffect(() => {
-    (async () => {
+    const fetch_data = async () => {
       try {
         const response = await axios.post(`${apiUrl}/api/post/find`, {
           id: sessionStorage.getItem("Doctor"),
@@ -51,8 +50,9 @@ export default function ConsultationForm() {
       } catch (error) {
         console.log(error);
       }
-    })();
-  }, []);
+    };
+    fetch_data();
+  }, [apiUrl]);
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <div className="max-w-md w-full p-6 bg-white rounded-lg shadow-md">
@@ -97,7 +97,6 @@ export default function ConsultationForm() {
             disabled={transition === 3}
             className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-r"
             onClick={() => {
-              console.log(transition);
               setTransition(transition + 1);
             }}
           >

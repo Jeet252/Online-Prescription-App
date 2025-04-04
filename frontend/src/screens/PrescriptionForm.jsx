@@ -3,11 +3,17 @@ import DoctorPrescription from "../components/DoctorPrescription";
 import axios from "axios";
 import PatientDetails from "../components/PatientDetails";
 import DoctorDetails from "../components/DoctorDetails";
+import { useNavigate } from "react-router-dom";
 
 export default function PrescriptionForm() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const [data, setData] = useState("");
   const printableElement = useRef(null);
+  const navigate = useNavigate();
+  const handleClick = () => {
+    sessionStorage.setItem("pdfData", JSON.stringify({ ...data }));
+    navigate("/pdf");
+  };
 
   useEffect(() => {
     (async () => {
@@ -17,12 +23,11 @@ export default function PrescriptionForm() {
           { _id: sessionStorage.getItem("Patient-ConsultationData") }
         );
         setData(response.data);
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
     })();
-  }, []);
+  }, [apiUrl]);
   return (
     <div
       ref={printableElement}
@@ -33,7 +38,7 @@ export default function PrescriptionForm() {
         <DoctorPrescription data={data} />
         {data === "" ? "loading" : <PatientDetails data={data} />}
       </div>
-      <button>Print</button>
+      <button onClick={handleClick}>Print</button>
     </div>
   );
 }

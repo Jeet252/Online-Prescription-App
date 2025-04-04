@@ -11,13 +11,13 @@ export default function DoctorHome() {
         const response = await axios.post(`${apiUrl}/api/post/patientlist`, {
           doctorId: localStorage.getItem("DoctorId"),
         });
-        console.log(response.data);
+
         setPatient(response.data.msg || response.data);
       } catch (error) {
         console.log(error);
       }
     })();
-  }, []);
+  }, [apiUrl]);
   return (
     <div className="bg-gray-100 min-h-screen p-4">
       <div className="max-w-7xl mx-auto">

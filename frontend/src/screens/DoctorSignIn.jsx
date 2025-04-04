@@ -17,7 +17,6 @@ export default function DoctorSignIn() {
           email: input,
         });
         if (response.status === 200) {
-          console.log("i m working");
           localStorage.setItem("DoctorId", response.data.userId._id);
           navigate("/doctor/home");
         }

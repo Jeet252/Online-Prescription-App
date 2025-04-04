@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function DoctorPrescription({ data }) {
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -8,25 +9,27 @@ export default function DoctorPrescription({ data }) {
     medicine: "",
     careTaken: "",
   });
+
+  const navigate = useNavigate();
+
+  sessionStorage.removeItem("pdfData");
   const handleSubmit = (e) => {
     e.preventDefault();
-    sessionStorage.setItem(
-      "pdfData",
-      JSON.stringify({ ...data, medicine: "", careTaken: "" })
-    );
-    console.log(input);
-    // (async () => {
-    //   try {
-    //     const response = await axios.post(
-    //       `${apiUrl}/api/post/prescription`,
-    //       input
-    //     );
-    //     sessionStorage.setItem("pdfData", JSON.stringify(data));
-    //     console.log(response);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // })();
+    const storeData = {
+      ...data,
+      medicine: input.medicine,
+      careTaken: input.careTaken,
+    };
+
+    (async () => {
+      try {
+        await axios.post(`${apiUrl}/api/post/prescription`, input);
+        sessionStorage.setItem("pdfData", JSON.stringify(storeData));
+        navigate("/pdf");
+      } catch (error) {
+        console.log(error);
+      }
+    })();
   };
   return (
     <div className="w-full md:w-1/2 space-y-4">
@@ -39,6 +42,7 @@ export default function DoctorPrescription({ data }) {
           <textarea
             className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="3"
+            name="careTaken"
             onChange={(e) => {
               setInput({ ...input, [e.target.name]: e.target.value });
             }}
@@ -52,6 +56,7 @@ export default function DoctorPrescription({ data }) {
           <textarea
             className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             rows="3"
+            name="medicine"
             onChange={(e) => {
               setInput({ ...input, [e.target.name]: e.target.value });
             }}
