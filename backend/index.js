@@ -10,7 +10,10 @@ import connectdb from "./codes/db/connection.js";
 const app = express();
 const port = process.env.PORT || 5000;
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: [
+    "http://localhost:5173",
+    "https://online-prescription-platform.onrender.com",
+  ],
   methods: "GET, POST, PUT, DELETE, PATCH, HEAD",
   credentials: true,
 };
