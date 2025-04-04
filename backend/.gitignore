@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 .env
 delete
+.netlify
+functions/index.js

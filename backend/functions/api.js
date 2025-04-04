@@ -6,6 +6,7 @@ import postRouter from "./codes/routes/post.route.js";
 import getRouter from "./codes/routes/get.route.js";
 import cors from "cors";
 import connectdb from "./codes/db/connection.js";
+import serverless from "serverless-http";
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -27,8 +28,10 @@ app.use("/", (req, res) => {
 app.use("/api/post", postRouter);
 app.use("/api/get", getRouter);
 
-connectdb().then(() => {
-  app.listen(port, () => {
-    console.log(`server is running at ${port}`);
-  });
-});
+connectdb();
+
+const handler = serverless(app);
+module.exports.handler = async (event, context) => {
+  const result = await handler(event, context);
+  return result;
+};
